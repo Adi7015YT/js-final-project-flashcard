@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrong Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <main class="flex flex-col items-center justify-center min-h-screen">
+        <div class="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
+            <h1 class="text-3xl font-bold mb-6 text-center">Revealed Cards</h1>
+            <div id="revealed-cards" class="mb-6"></div>
+            <div id="final-score" class="text-center font-bold"></div>
+            <div class="flex justify-center mt-6">
+                <button id="start-over" class="px-4 py-2 bg-green-500 text-white rounded-md font-bold">Start Over</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealedCardsContainer = document.getElementById('revealed-cards');
+            const finalScore = document.getElementById('final-score');
+            const startOverButton = document.getElementById('start-over');
+            const revealedCards = JSON.parse(localStorage.getItem('revealedCards')) || [];
+            const totalCards = JSON.parse(localStorage.getItem('totalCards')) || 0;
+            const revealedCount = revealedCards.length;
+
+            if (revealedCount > 0) {
+                revealedCards.forEach((card, index) => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.innerHTML = `<strong>${card.word}</strong>: ${card.meaning}`;
+                    cardDiv.classList.add('mb-2');
+                    revealedCardsContainer.appendChild(cardDiv);
+                });
+            } else {
+                revealedCardsContainer.innerText = 'No revealed cards.';
+            }
+
+            finalScore.innerText = `Final Score: ${revealedCount}/${totalCards}`;
+            localStorage.removeItem('revealedCards');
+            localStorage.removeItem('totalCards');
+            
+            startOverButton.addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+
+</html>

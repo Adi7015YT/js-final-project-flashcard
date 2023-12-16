@@ -34,30 +34,60 @@ const flashcardsData = [
 const cardContainer = document.getElementById('card-container');
 const startButton = document.getElementById('start-button');
 const resetButton = document.getElementById('reset-button');
+const doneButton = document.getElementById('done-button');
+const scoreCard = document.getElementById('score-card');
 
-const handleStart = () => {
-  flashcardsData.forEach((item) => {
-    //* Card add section
+let revealedCards = [];
+
+const updateScore = () => {
+  scoreCard.innerText = `Score: ${revealedCards.length}/${flashcardsData.length}`;
+};
+
+const createCards = () => {
+  flashcardsData.forEach((item, index) => {
     const cardElement = document.createElement('div');
     cardElement.className = 'border-2 border-green-500 rounded-md p-5 h-full';
     cardElement.innerText = item.word;
     cardContainer.appendChild(cardElement);
 
-    //* Card click event
     cardElement.addEventListener('click', () => {
-      console.log(item.word);
-      cardElement.classList.add('border-red-500');
-      cardElement.innerText = item.meaning;
+      if (!cardElement.classList.contains('border-red-500')) {
+        cardElement.classList.add('border-red-500');
+        cardElement.innerText = item.meaning;
+        revealedCards.push(item);
+        updateScore();
+      }
     });
   });
+};
+
+const handleStart = () => {
+  createCards();
 
   resetButton.classList.remove('hidden');
   startButton.classList.add('hidden');
+  doneButton.classList.remove('hidden');
+  updateScore();
 };
 
 const handleReset = () => {
   cardContainer.innerHTML = '';
+  revealedCards = [];
+  updateScore();
 
   startButton.classList.remove('hidden');
   resetButton.classList.add('hidden');
+  doneButton.classList.add('hidden');
 };
+
+const handleDone = () => {
+  localStorage.setItem('revealedCards', JSON.stringify(revealedCards));
+  localStorage.setItem('totalCards', JSON.stringify(flashcardsData.length));
+  window.location.href = 'wrong_answers.html';
+};
+
+startButton.addEventListener('click', handleStart);
+resetButton.addEventListener('click', handleReset);
+doneButton.addEventListener('click', handleDone);
+
+updateScore();
