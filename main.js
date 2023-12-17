@@ -61,14 +61,23 @@ const createCards = () => {
   });
 };
 
-const handleStart = () => {
-  createCards();
+let isButtonClickable = true;
 
-  resetButton.classList.remove('hidden');
-  startButton.classList.add('hidden');
-  doneButton.classList.remove('hidden');
-  updateScore();
+const handleStart = () => {
+  if (!isButtonClickable) return;
+
+  isButtonClickable = false;
+  setTimeout(() => {
+    isButtonClickable = true;
+  }, 1000);
+    createCards();
+    resetButton.classList.remove('hidden');
+    startButton.classList.add('hidden');
+    doneButton.classList.remove('hidden');
+    updateScore();
+
 };
+
 
 const handleReset = () => {
   cardContainer.innerHTML = '';
